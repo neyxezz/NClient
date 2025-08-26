@@ -681,6 +681,8 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 
 	bool Highlighted = false;
 
+	char aNameBuf[64];
+
 	auto &&FChatMsgCheckAndPrint = [this](const CLine &Line) {
 		if(Line.m_ClientId < 0) // server or client message
 		{
@@ -813,6 +815,7 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 
 		if(Team == TEAM_WHISPER_SEND)
 		{
+			str_format(aNameBuf, sizeof(aNameBuf), "%s", LineAuthor.m_aName);
 			str_copy(CurrentLine.m_aName, "→");
 			if(LineAuthor.m_Active)
 			{
@@ -825,6 +828,7 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 		}
 		else if(Team == TEAM_WHISPER_RECV)
 		{
+			str_format(aNameBuf, sizeof(aNameBuf), "%s", LineAuthor.m_aName);
 			str_copy(CurrentLine.m_aName, "←");
 			if(LineAuthor.m_Active)
 			{
@@ -837,6 +841,7 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 		}
 		else
 		{
+			str_format(aNameBuf, sizeof(aNameBuf), "%s", LineAuthor.m_aName);
 			str_copy(CurrentLine.m_aName, LineAuthor.m_aName);
 		}
 
@@ -868,9 +873,12 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 	}
 	else if(Highlighted && Client()->State() != IClient::STATE_DEMOPLAYBACK)
 	{
-		if (g_Config.m_NcEnableReplyPing) { //
+		if (g_Config.m_NcEnableReplyPing) {
 			char aReplyBuf[1024];
-			str_format(aReplyBuf, sizeof(aReplyBuf), "%s: %s", CurrentLine.m_aName, g_Config.m_NcReplyPing);
+			if(Team == TEAM_WHISPER_RECV)
+				str_format(aReplyBuf, sizeof(aReplyBuf), "/w %s %s", aNameBuf, g_Config.m_NcReplyPing);
+			else
+				str_format(aReplyBuf, sizeof(aReplyBuf), "%s: %s", aNameBuf, g_Config.m_NcReplyPing);
 			SendChat(0, aReplyBuf);
 		}
 		if(Now - m_aLastSoundPlayed[CHAT_HIGHLIGHT] >= time_freq() * 3 / 10)
@@ -878,11 +886,6 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 			char aBuf[1024];
 			str_format(aBuf, sizeof(aBuf), "%s: %s", CurrentLine.m_aName, CurrentLine.m_aText);
 			Client()->Notify("DDNet Chat", aBuf);
-			/*if (g_Config.m_NcEnabledReplyPingNotTabbed) { //
-				char aReplyNotTabbedBuf[1024];
-				str_format(aReplyNotTabbedBuf, sizeof(aReplyNotTabbedBuf), "%s: %s", CurrentLine.m_aName, g_Config.m_NcReplyPingNotTabbed);
-				SendChat(0, aReplyNotTabbedBuf);
-			}*/
 			if(g_Config.m_SndHighlight)
 			{
 				GameClient()->m_Sounds.Play(CSounds::CHN_GUI, SOUND_CHAT_HIGHLIGHT, 1.0f);
