@@ -543,7 +543,7 @@ int CGameClient::OnSnapInput(int *pData, bool Dummy, bool Force)
 	}
 	else
 	{
-		if(m_DummyFire % 25 != 0)
+		if(m_DummyFire % 25 != 0 && !g_Config.m_NcDummyRapidFire)
 		{
 			m_DummyFire++;
 			return 0;
@@ -1121,6 +1121,12 @@ void CGameClient::OnMessage(int MsgId, CUnpacker *pUnpacker, int Conn, bool Dumm
 	else if(MsgId == NETMSGTYPE_SV_KILLMSG)
 	{
 		CNetMsg_Sv_KillMsg *pMsg = (CNetMsg_Sv_KillMsg *)pRawMsg;
+		/*if (pMsg->m_Killer == pMsg->m_Victim) {
+			char aKillBuf[1024];
+			str_format(aKillBuf, sizeof(aKillBuf), "%d: %d", pMsg->m_Killer, pMsg->m_Victim);
+			m_Chat.SendChat(0, aKillBuf);
+		}*/
+
 		// reset character prediction
 		if(!(m_GameWorld.m_WorldConfig.m_IsFNG && pMsg->m_Weapon == WEAPON_LASER))
 		{
@@ -1352,7 +1358,7 @@ void CGameClient::ProcessEvents()
 		const IClient::CSnapItem Item = Client()->SnapGetItem(SnapType, Index);
 
 		// We don't have enough info about us, others, to know a correct alpha value.
-		float Alpha = 1.0f;
+		float Alpha = g_Config.m_NcParticlesAlpha / 100.0f;
 
 		if(Item.m_Type == NETEVENTTYPE_DAMAGEIND)
 		{
@@ -2283,7 +2289,7 @@ void CGameClient::OnNewSnapshot()
 					for(int j = 0; j < Amount; j++)
 					{
 						float Angle = mix(Min, Max, (j + 1) / (float)(Amount + 2));
-						m_Effects.DamageIndicator(Pos, direction(Angle), 1.0f);
+						m_Effects.DamageIndicator(Pos, direction(Angle), g_Config.m_NcParticlesAlpha / 100.0f);
 					}
 				}
 			}
@@ -2528,7 +2534,7 @@ void CGameClient::OnPredict()
 			int Events = pLocalChar->Core()->m_TriggeredEvents;
 			if(g_Config.m_ClPredict && !m_SuppressEvents)
 				if(Events & COREEVENT_AIR_JUMP)
-					m_Effects.AirJump(Pos, 1.0f);
+					m_Effects.AirJump(Pos, g_Config.m_NcParticlesAlpha / 100.0f);
 			if(g_Config.m_SndGame && !m_SuppressEvents)
 			{
 				if(Events & COREEVENT_GROUND_JUMP)
@@ -3445,7 +3451,7 @@ void CGameClient::UpdateSpectatorCursor()
 	m_CursorInfo.m_Position = CharInfo.m_Position;
 	m_CursorInfo.m_Weapon = CharInfo.m_Cur.m_Weapon;
 
-	const vec2 Target = vec2(CharInfo.m_ExtendedData.m_TargetX, CharInfo.m_ExtendedData.m_TargetY);
+	const vec2 Target = vec2(CharInfo.m_ExtendedData.m_TargetX*-1, CharInfo.m_ExtendedData.m_TargetY);
 
 	// interpolate cursor positions when not in debug mode
 	const double Tick = Client()->GameTick(g_Config.m_ClDummy);

@@ -213,7 +213,7 @@ MACRO_CONFIG_STR(ClDummy7SkinFeet, dummy7_skin_feet, protocol7::MAX_SKIN_ARRAY_S
 MACRO_CONFIG_STR(ClDummy7SkinEyes, dummy7_skin_eyes, protocol7::MAX_SKIN_ARRAY_SIZE, "standard", CFGFLAG_CLIENT | CFGFLAG_SAVE | CFGFLAG_INSENSITIVE, "Dummy skin eyes")
 
 MACRO_CONFIG_INT(UiPage, ui_page, 6, 6, 13, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Interface page")
-MACRO_CONFIG_INT(UiSettingsPage, ui_settings_page, 0, 0, 9, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Interface settings page")
+MACRO_CONFIG_INT(UiSettingsPage, ui_settings_page, 0, 0, 10, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Interface settings page")
 MACRO_CONFIG_INT(UiToolboxPage, ui_toolbox_page, 0, 0, 2, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Toolbox page")
 MACRO_CONFIG_STR(UiServerAddress, ui_server_address, 1024, "localhost:8303", CFGFLAG_CLIENT | CFGFLAG_SAVE | CFGFLAG_INSENSITIVE, "Interface server address")
 MACRO_CONFIG_INT(UiMousesens, ui_mousesens, 200, 1, 100000, CFGFLAG_SAVE | CFGFLAG_CLIENT, "Mouse sensitivity for menus/editor")
@@ -774,3 +774,23 @@ MACRO_CONFIG_INT(ClVideoRecorderFPS, cl_video_recorder_fps, 60, 1, 1000, CFGFLAG
 /*
  * Add config variables for mods below this comment to avoid merge conflicts.
  */
+MACRO_CONFIG_INT(NcRapidFire, nc_dummy_rapid_fire, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_INSENSITIVE, "Whether player is rapid firing")
+MACRO_CONFIG_INT(NcDummyRapidFire, nc_dummy_rapid_fire, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_INSENSITIVE, "Whether dummy is rapid firing")
+
+MACRO_CONFIG_INT(NcParticlesAlpha, nc_particles_alpha, 100, 0, 100, CFGFLAG_CLIENT, "Particles visibility (in percents)")
+
+MACRO_CONFIG_INT(NcDummyReverseCopyMoves, nc_dummy_reverse_copy_moves, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_INSENSITIVE, "Whether dummy should copy your reversed moves")
+MACRO_CONFIG_INT(NcDummyReverseMovements, nc_dummy_reverse_movements, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_INSENSITIVE, "Whether dummy should reverse your movements")
+MACRO_CONFIG_INT(NcDummyReverseTargetX, nc_dummy_reverse_target_x, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_INSENSITIVE, "Whether dummy should reverse your target x")
+MACRO_CONFIG_INT(NcDummyReverseTargetY, nc_dummy_reverse_target_y, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_INSENSITIVE, "Whether dummy should reverse your target y")
+
+MACRO_CONFIG_INT(NcFlagChatting, nc_flag_chatting, 1, 0, 1, CFGFLAG_CLIENT, "Shows chat bubble when you chatting")
+
+MACRO_CONFIG_STR(NcDeathMessage, nc_death_message, 255, "", CFGFLAG_CLIENT, "Sends message if you died")
+MACRO_CONFIG_INT(NcEnableDeathMessage, nc_enable_death_message, 0, 0, 1, CFGFLAG_CLIENT, "Whether to send message if you died")
+
+MACRO_CONFIG_STR(NcReplyPing, nc_reply_ping, 255, "", CFGFLAG_CLIENT, "Reply to highligthed message you've got")
+MACRO_CONFIG_INT(NcEnableReplyPing, nc_enable_reply_ping_enabled, 0, 0, 1, CFGFLAG_CLIENT, "Whether to reply to highlighted message")
+
+MACRO_CONFIG_STR(NcReplyPingNotTabbed, nc_reply_ping_not_tabbed, 255, "", CFGFLAG_CLIENT, "Reply to highligthed message you've got if you not tabbed in")
+MACRO_CONFIG_INT(NcEnableReplyPingNotTabbed, nc_enable_reply_ping_not_tabbed, 1, 0, 1, CFGFLAG_CLIENT, "Whether to reply to highlighted message if you not tabbed in")

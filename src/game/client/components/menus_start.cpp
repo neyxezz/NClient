@@ -177,7 +177,10 @@ void CMenusStart::RenderStartMenu(CUIRect MainView)
 	CurVersion.HSplitTop(20.0f, &ConsoleButton, &CurVersion);
 	CurVersion.HSplitTop(5.0f, nullptr, &CurVersion);
 	ConsoleButton.VSplitRight(40.0f, nullptr, &ConsoleButton);
-	Ui()->DoLabel(&CurVersion, GAME_RELEASE_VERSION, 14.0f, TEXTALIGN_MR);
+
+	char aVerBuf[64];
+	str_format(aVerBuf, sizeof(aVerBuf), Localize("NClient 1.0 (DDNet %s)"), GAME_RELEASE_VERSION);
+	Ui()->DoLabel(&CurVersion, aVerBuf, 14.0f, TEXTALIGN_MR);
 
 	static CButtonContainer s_ConsoleButton;
 	TextRender()->SetFontPreset(EFontPreset::ICON_FONT);

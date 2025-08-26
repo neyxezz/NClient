@@ -16,6 +16,8 @@
 
 #include "controls.h"
 
+#include <iostream>
+
 CControls::CControls()
 {
 	mem_zero(&m_aLastData, sizeof(m_aLastData));
@@ -182,7 +184,10 @@ int CControls::SnapInput(int *pData)
 {
 	// update player state
 	if(GameClient()->m_Chat.IsActive())
-		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags = PLAYERFLAG_CHATTING;
+		if (g_Config.m_NcFlagChatting)
+			m_aInputData[g_Config.m_ClDummy].m_PlayerFlags = PLAYERFLAG_CHATTING;
+		else
+			m_aInputData[g_Config.m_ClDummy].m_PlayerFlags = PLAYERFLAG_PLAYING;
 	else if(GameClient()->m_Menus.IsActive())
 		m_aInputData[g_Config.m_ClDummy].m_PlayerFlags = PLAYERFLAG_IN_MENU;
 	else
@@ -242,16 +247,21 @@ int CControls::SnapInput(int *pData)
 		if(!m_aInputDirectionLeft[g_Config.m_ClDummy] && m_aInputDirectionRight[g_Config.m_ClDummy])
 			m_aInputData[g_Config.m_ClDummy].m_Direction = 1;
 
+		const int ReversedMovements = g_Config.m_NcDummyReverseCopyMoves&&g_Config.m_NcDummyReverseMovements ? -1 : 1;
+		const int ReversedTargetX = g_Config.m_NcDummyReverseCopyMoves&&g_Config.m_NcDummyReverseTargetX ? -1 : 1;
+		const int ReversedTargetY = g_Config.m_NcDummyReverseCopyMoves&&g_Config.m_NcDummyReverseTargetY ? -1 : 1;
+
 		// dummy copy moves
 		if(g_Config.m_ClDummyCopyMoves)
 		{
 			CNetObj_PlayerInput *pDummyInput = &GameClient()->m_DummyInput;
-			pDummyInput->m_Direction = m_aInputData[g_Config.m_ClDummy].m_Direction;
+			pDummyInput->m_Direction = m_aInputData[g_Config.m_ClDummy].m_Direction*ReversedMovements;
 			pDummyInput->m_Hook = m_aInputData[g_Config.m_ClDummy].m_Hook;
 			pDummyInput->m_Jump = m_aInputData[g_Config.m_ClDummy].m_Jump;
 			pDummyInput->m_PlayerFlags = m_aInputData[g_Config.m_ClDummy].m_PlayerFlags;
-			pDummyInput->m_TargetX = m_aInputData[g_Config.m_ClDummy].m_TargetX;
-			pDummyInput->m_TargetY = m_aInputData[g_Config.m_ClDummy].m_TargetY;
+			pDummyInput->m_TargetX = m_aInputData[g_Config.m_ClDummy].m_TargetX*ReversedTargetX;
+			pDummyInput->m_TargetY = m_aInputData[g_Config.m_ClDummy].m_TargetY*ReversedTargetY;
+
 			pDummyInput->m_WantedWeapon = m_aInputData[g_Config.m_ClDummy].m_WantedWeapon;
 
 			if(!g_Config.m_ClDummyControl)

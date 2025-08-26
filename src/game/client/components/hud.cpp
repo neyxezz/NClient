@@ -1318,7 +1318,7 @@ void CHud::RenderDummyActions()
 		return;
 	}
 	// render small dummy actions hud
-	const float BoxHeight = 29.0f;
+	const float BoxHeight = 40.0f;
 	const float BoxWidth = 16.0f;
 
 	float StartX = m_Width - BoxWidth;
@@ -1348,6 +1348,14 @@ void CHud::RenderDummyActions()
 	y += 13;
 	Graphics()->SetColor(1.0f, 1.0f, 1.0f, 0.4f);
 	if(g_Config.m_ClDummyCopyMoves)
+	{
+		Graphics()->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+	Graphics()->TextureSet(GameClient()->m_HudSkin.m_SpriteHudDummyCopy);
+	Graphics()->RenderQuadContainerAsSprite(m_HudQuadContainerIndex, m_DummyCopyOffset, x, y);
+	y += 11;
+	Graphics()->SetColor(1.0f, 1.0f, 1.0f, 0.4f);
+	if(g_Config.m_NcDummyReverseCopyMoves)
 	{
 		Graphics()->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}

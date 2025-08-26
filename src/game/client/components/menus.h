@@ -667,6 +667,7 @@ public:
 		SETTINGS_GRAPHICS,
 		SETTINGS_SOUND,
 		SETTINGS_DDNET,
+		SETTINGS_FEATURES,
 		SETTINGS_ASSETS,
 
 		SETTINGS_LENGTH,
@@ -801,6 +802,7 @@ private:
 
 	// found in menus_settings.cpp
 	void RenderSettingsDDNet(CUIRect MainView);
+	void RenderSettingsFeatures(CUIRect MainView);
 	void RenderSettingsAppearance(CUIRect MainView);
 	bool RenderHslaScrollbars(CUIRect *pRect, unsigned int *pColor, bool Alpha, float DarkestLight);
 };

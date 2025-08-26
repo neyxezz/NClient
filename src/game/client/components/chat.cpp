@@ -20,6 +20,8 @@
 
 #include "chat.h"
 
+#include <iostream>
+
 char CChat::ms_aDisplayText[MAX_LINE_LENGTH] = "";
 
 CChat::CLine::CLine()
@@ -866,11 +868,21 @@ void CChat::AddLine(int ClientId, int Team, const char *pLine)
 	}
 	else if(Highlighted && Client()->State() != IClient::STATE_DEMOPLAYBACK)
 	{
+		if (g_Config.m_NcEnableReplyPing) { //
+			char aReplyBuf[1024];
+			str_format(aReplyBuf, sizeof(aReplyBuf), "%s: %s", CurrentLine.m_aName, g_Config.m_NcReplyPing);
+			SendChat(0, aReplyBuf);
+		}
 		if(Now - m_aLastSoundPlayed[CHAT_HIGHLIGHT] >= time_freq() * 3 / 10)
 		{
 			char aBuf[1024];
 			str_format(aBuf, sizeof(aBuf), "%s: %s", CurrentLine.m_aName, CurrentLine.m_aText);
 			Client()->Notify("DDNet Chat", aBuf);
+			/*if (g_Config.m_NcEnabledReplyPingNotTabbed) { //
+				char aReplyNotTabbedBuf[1024];
+				str_format(aReplyNotTabbedBuf, sizeof(aReplyNotTabbedBuf), "%s: %s", CurrentLine.m_aName, g_Config.m_NcReplyPingNotTabbed);
+				SendChat(0, aReplyNotTabbedBuf);
+			}*/
 			if(g_Config.m_SndHighlight)
 			{
 				GameClient()->m_Sounds.Play(CSounds::CHN_GUI, SOUND_CHAT_HIGHLIGHT, 1.0f);
